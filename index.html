@@ -52,7 +52,7 @@
     </div>
 
     <script>
-        // --- 1. ใส่รหัสเชื่อมต่อ Firebase ของพี่ ---
+        // --- 1. ใส่รหัสเชื่อมต่อ Firebase ของพี่ (เติม databaseURL ให้แล้ว) ---
         const firebaseConfig = {
             apiKey: "AIzaSyBE3VhMO0-brsBM4fv1lI-D331me8ZPuJU",
             authDomain: "oatza-88e5f.firebaseapp.com",
@@ -86,9 +86,10 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
+                // บันทึกข้อมูลรูปลง Database ถาวร
                 db.ref('memories').push({
                     year: year,
-                    image: e.target.result, // บันทึกข้อมูลรูปลง Database ถาวร
+                    image: e.target.result,
                     time: Date.now()
                 }).then(() => {
                     alert("บันทึกถาวรเรียบร้อย! เจ๋งเป้ง");
@@ -99,42 +100,6 @@
         });
 
         // --- 4. ระบบดึงรูปมาโชว์อัตโนมัติ ---
-        db.ref('memories').on('value', (snap) => {
-            const gallery = document.getElementById('gallery');
-            gallery.innerHTML = "";
-            const data = snap.val();
-            if (data) {
-                const items = Object.values(data).sort((a,b) => b.time - a.time);
-                items.forEach(item => {
-                    gallery.innerHTML += `
-                        <div class="year-tag">${item.year}</div>
-                        <div class="card"><img src="${item.image}"></div>
-                    `;
-                });
-            }
-        });
-    </script>
-</body>
-</html>
-
-        document.getElementById('fileInput').addEventListener('change', function() {
-            const file = this.files[0];
-            const year = document.getElementById('yearInput').value || "ความทรงจำ";
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                // แปลงเป็น Base64 แล้วยิงลง Database
-                db.ref('memories').push({
-                    year: year,
-                    image: e.target.result,
-                    time: Date.now()
-                }).then(() => alert("บันทึกถาวรเรียบร้อย!"));
-            };
-            reader.readAsDataURL(file);
-        });
-
-        // --- 4. ดึงข้อมูลมาแสดงผล ---
         db.ref('memories').on('value', (snap) => {
             const gallery = document.getElementById('gallery');
             gallery.innerHTML = "";
