@@ -3,108 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>คิดถึงพ่อ | Memory of Dad</title>
+    <title>ความทรงจำถึงพ่อ | Memory of Dad</title>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <style>
-        :root { --pink: #ffdae9; --blue: #e3f2fd; --accent: #ff8fa3; --glass: rgba(255, 255, 255, 0.6); }
+        :root { --pink: #ffdae9; --blue: #e3f2fd; --accent: #ff8fa3; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tahoma', sans-serif; }
+        body { background: linear-gradient(135deg, var(--blue), var(--pink)); background-attachment: fixed; min-height: 100vh; padding: 20px; }
         
-        body {
-            background: linear-gradient(135deg, var(--blue) 0%, var(--pink) 100%);
-            background-attachment: fixed;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* --- เอฟเฟกต์ดอกไม้ร่วง --- */
+        /* เอฟเฟกต์ดอกไม้ร่วง */
         .flower { position: fixed; color: var(--accent); user-select: none; z-index: 99; pointer-events: none; animation: fall linear infinite; }
         @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; position: relative; z-index: 10; }
-
-        /* --- แผงควบคุมสายโหด --- */
-        .admin-panel {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-radius: 30px;
-            border: 2px solid #fff;
-            text-align: center;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
-        input { width: 80%; padding: 12px; margin: 10px 0; border-radius: 15px; border: 1px solid #fff; outline: none; text-align: center; }
-        .btn-upload { 
-            background: var(--accent); color: white; border: none; padding: 15px 30px; 
-            border-radius: 50px; cursor: pointer; font-weight: bold; width: 80%; 
-            box-shadow: 0 5px 15px rgba(255,143,163,0.3); transition: 0.3s;
-        }
+        .container { max-width: 600px; margin: 0 auto; position: relative; z-index: 10; }
+        
+        /* ส่วนอัปโหลด */
+        .admin-panel { background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); padding: 20px; border-radius: 30px; border: 2px solid #fff; text-align: center; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        input { width: 90%; padding: 12px; margin: 8px 0; border-radius: 15px; border: 1px solid #fff; outline: none; text-align: center; }
+        .btn-upload { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 50px; cursor: pointer; font-weight: bold; width: 90%; transition: 0.3s; margin-top: 10px; }
         .btn-upload:active { transform: scale(0.95); }
 
-        /* --- Timeline รูปภาพ --- */
-        .year-tag { font-size: 2.5rem; color: var(--accent); font-weight: bold; margin-top: 50px; text-shadow: 2px 2px 0 #fff; }
-        .card { 
-            background: #fff; padding: 10px; border-radius: 25px; border: 5px solid #fff; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.05); margin-top: 10px; transition: 0.5s;
-        }
+        /* Timeline รูปภาพ */
+        .year-tag { font-size: 2.2rem; color: var(--accent); font-weight: bold; margin-top: 40px; text-shadow: 2px 2px 0 #fff; }
+        .card { background: #fff; padding: 12px; border-radius: 25px; border: 5px solid #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.05); margin-top: 10px; }
         .card img { width: 100%; border-radius: 18px; display: block; }
 
-        /* --- ข้อความ คิดถึง/รักพ่อ --- */
-        .footer-text { text-align: center; margin-top: 80px; padding-bottom: 50px; }
-        .footer-text h2 { font-size: 3.5rem; color: var(--accent); text-shadow: 3px 3px 0 #fff; }
-        .footer-text p { font-size: 1.5rem; color: #888; margin-top: 10px; }
+        .footer { text-align: center; margin: 60px 0; }
+        .footer h2 { font-size: 3.5rem; color: var(--accent); text-shadow: 3px 3px 0 #fff; }
+        .footer p { font-size: 1.4rem; color: #777; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="admin-panel">
-            <h3 style="color: var(--accent);">จัดการความทรงจำ</h3>
-            <input type="password" id="adminPass" placeholder="รหัสลับของพี่">
-            <input type="text" id="yearInput" placeholder="ปีที่บันทึก (เช่น 2567)">
+            <h3 style="color: var(--accent);">เพิ่มความทรงจำใหม่</h3>
+            <input type="text" id="yearInput" placeholder="ใส่ปี (เช่น 2560)">
             <input type="file" id="fileInput" accept="image/*" style="display:none">
-            <button class="btn-upload" onclick="validate()">เลือกรูปจากแกลเลอรี่ & บันทึกถาวร</button>
+            <button class="btn-upload" onclick="document.getElementById('fileInput').click()">เลือกรูปจากแกลเลอรี่ & บันทึกถาวร</button>
         </div>
 
         <div id="gallery"></div>
 
-        <div class="footer-text">
+        <div class="footer">
             <h2>รักพ่อ</h2>
             <p>🌻 คิดถึงพ่อที่สุด 🌻</p>
         </div>
     </div>
 
     <script>
-        // --- 1. การตั้งค่าระบบ (พี่ต้องเอาจาก Firebase มาแปะ) ---
-        const firebaseConfig = { databaseURL: "https://PROJECT-NAME-HERE.firebaseio.com/" };
+        // --- 1. ใส่รหัสเชื่อมต่อ Firebase ของพี่ ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBE3VhMO0-brsBM4fv1lI-D331me8ZPuJU",
+            authDomain: "oatza-88e5f.firebaseapp.com",
+            databaseURL: "https://oatza-88e5f-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "oatza-88e5f",
+            storageBucket: "oatza-88e5f.firebasestorage.app",
+            messagingSenderId: "265747109009",
+            appId: "1:265747109009:web:6fc746d6c042f6383d1b30",
+            measurementId: "G-1JEPW4PCVQ"
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        const MY_PASS = "1234"; // เปลี่ยนรหัสพี่ตรงนี้!!
-
-        // --- 2. ระบบดอกไม้ร่วงหล่น ---
+        // --- 2. ระบบดอกไม้ร่วง ---
         function createFlower() {
             const f = document.createElement('div');
-            f.className = 'flower';
-            f.innerHTML = '🌸'; // หรือใส่ 🌼
+            f.className = 'flower'; f.innerHTML = '🌸';
             f.style.left = Math.random() * 100 + 'vw';
             f.style.animationDuration = Math.random() * 3 + 2 + 's';
-            f.style.opacity = Math.random();
             f.style.fontSize = Math.random() * 20 + 10 + 'px';
             document.body.appendChild(f);
             setTimeout(() => f.remove(), 5000);
         }
-        setInterval(createFlower, 300);
+        setInterval(createFlower, 400);
 
-        // --- 3. ระบบตัดสินใจอัปโหลด (Decision Logic) ---
-        function validate() {
-            if (document.getElementById('adminPass').value !== MY_PASS) {
-                alert("รหัสไม่ถูก เจาะไม่เข้าหรอกพี่!");
-                return;
+        // --- 3. ระบบอัปโหลดรูปภาพลง Database ---
+        document.getElementById('fileInput').addEventListener('change', function() {
+            const file = this.files[0];
+            const year = document.getElementById('yearInput').value || "ความทรงจำ";
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                db.ref('memories').push({
+                    year: year,
+                    image: e.target.result, // บันทึกข้อมูลรูปลง Database ถาวร
+                    time: Date.now()
+                }).then(() => {
+                    alert("บันทึกถาวรเรียบร้อย! เจ๋งเป้ง");
+                    document.getElementById('yearInput').value = "";
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // --- 4. ระบบดึงรูปมาโชว์อัตโนมัติ ---
+        db.ref('memories').on('value', (snap) => {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = "";
+            const data = snap.val();
+            if (data) {
+                const items = Object.values(data).sort((a,b) => b.time - a.time);
+                items.forEach(item => {
+                    gallery.innerHTML += `
+                        <div class="year-tag">${item.year}</div>
+                        <div class="card"><img src="${item.image}"></div>
+                    `;
+                });
             }
-            document.getElementById('fileInput').click();
-        }
+        });
+    </script>
+</body>
+</html>
 
         document.getElementById('fileInput').addEventListener('change', function() {
             const file = this.files[0];
