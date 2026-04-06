@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dad Memory | อัปโหลดความทรงจำ</title>
+    <style>
+        :root {
+            --pastel-pink: #ffdae9;
+            --pastel-blue: #e3f2fd;
+            --accent-pink: #ff8fa3;
+            --accent-blue: #90caf9;
+            --text-dark: #4a4a4a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tahoma', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, var(--pastel-blue) 0%, var(--pastel-pink) 100%);
+            background-attachment: fixed;
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding-bottom: 100px;
+        }
+
+        /* ส่วนหัว */
+        .header {
+            text-align: center;
+            padding: 50px 20px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+
+        /* ปุ่มอัปโหลดแบบโปร */
+        .upload-container {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .btn-select {
+            background-color: var(--accent-blue);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .btn-select:hover {
+            background-color: var(--accent-pink);
+            transform: scale(1.05);
+        }
+
+        /* พื้นที่แสดงรูปภาพ (Timeline) */
+        .timeline {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column-reverse; /* เอารูปใหม่ไว้บนสุด */
+            gap: 40px;
+            padding: 0 20px;
+        }
+
+        .memory-card {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .memory-card img {
+            width: 100%;
+            border-radius: 15px;
+            display: block;
+        }
+
+        .memory-date {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #888;
+            text-align: right;
+        }
+
+        /* แอนิเมชันตอนรูปโผล่ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ข้อความปิดท้าย */
+        .footer-love {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 3rem;
+            color: var(--accent-pink);
+            display: none; /* จะโชว์เมื่อมีรูป */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Memory of Dad</h1>
+        <p>กดปุ่มด้านล่างเพื่อเลือกรูปจากแกลเลอรี</p>
+    </div>
+
+    <div class="upload-container">
+        <input type="file" id="imageInput" accept="image/*" multiple style="display: none;">
+        <button class="btn-select" onclick="document.getElementById('imageInput').click()">
+            เลือกรูปภาพจากแกลเลอรี
+        </button>
+    </div>
+
+    <div id="timeline" class="timeline">
+        </div>
+
+    <div id="loveMsg" class="footer-love">รักพ่อ</div>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const timeline = document.getElementById('timeline');
+        const loveMsg = document.getElementById('loveMsg');
+
+        imageInput.addEventListener('change', function() {
+            const files = this.files;
+            
+            if (files.length > 0) {
+                loveMsg.style.display = 'block';
+            }
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const card = document.createElement('div');
+                    card.className = 'memory-card';
+                    
+                    card.innerHTML = `
+                        <img src="${e.target.result}">
+                        <div class="memory-date">บันทึกเมื่อ: ${new Date().toLocaleDateString('th-TH')}</div>
+                    `;
+                    
+                    timeline.appendChild(card);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
+
